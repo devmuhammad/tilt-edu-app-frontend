@@ -1,14 +1,12 @@
 import React, {Fragment} from 'react';
-import ReactDOM from 'react-dom';
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Frontend from "./frontend/Frontend";
 import Admin from "./admin/Admin";
 import Auth from "./frontend/views/auth/Auth";
-import Questionnaire from "./admin/components/questionnaire/Questionnaire"
 
 function App() {
     return (
-        <BrowserRouter>
+        <Router>
             <Fragment>
                 <Switch>
                     <Route path={"/admin"} component={Admin} />
@@ -16,11 +14,8 @@ function App() {
                     <Route path={"/"} component={Frontend}/>
                 </Switch>
             </Fragment>
-        </BrowserRouter>
+        </Router>
     );
 }
 
-if (document.getElementById('root')) {
-    ReactDOM.render(<App/>, document.getElementById('root'));
-}
 export default App;
