@@ -11,14 +11,61 @@
 }
 
 .compose.group{
-
   .group-btn{
     width: 100%;
-    background-color: #0ba1b5;
+    background-color: #e5f3fe;
     border-radius: 0;
+    font-weight: bolder;
+    i{
+      padding-left: 0.6rem;
+      color: #02497f
+    }
   }
 
 }
+
+.mail-list-container{
+  .section-button{
+    width: 100%;
+    border-radius: 0;
+    background-color: #ffe5e6;
+    border-color: #ffe5e6;
+    color: #352525;
+    font-weight: bolder;
+
+    &:hover{
+      background-color: rgba(255, 224, 225, 0.75);
+      border-color: #ffe5e6;
+      ;
+    }
+
+    &:focus,&:active{
+      background-color: rgba(255, 224, 225, 0.75);
+    }
+
+    i{
+      color: #d90804;
+      padding-left: 0.6rem;
+    }
+  }
+}
+
+.question-button-container{
+  position: relative;
+  .btn.question-button{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #e6ffe9;
+    font-weight: bolder;
+    & i{
+      color: #147959;
+      font-weight: bolder;
+      padding-left: 0.6rem;
+    }
+  }
+}
+
 
 .email-wrapper .mail-sidebar .menu-bar .menu-items{
   padding: 10px !important;

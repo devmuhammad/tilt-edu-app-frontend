@@ -36,7 +36,8 @@ const AddSectionModal = (props) => {
             axios.post('https://tiltapp-api.herokuapp.com/sections',data).then( res => {
                 axios.get('https://tiltapp-api.herokuapp.com/sections').then(res => {
                     setSections(res.data);
-                    console.log(res.data);
+                    props.handleRemoveModal();
+
                 }).catch( err => {
                     console.log(err);
                 });

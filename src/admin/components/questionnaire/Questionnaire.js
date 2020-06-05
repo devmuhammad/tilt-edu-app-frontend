@@ -11,7 +11,6 @@ import Question from './question/Question';
                         <div className="mail-sidebar d-none d-lg-block col-md-2 p-0 bg-white">
                             <Group/>
                         </div>
-                        
                         <Section />
                         <Question />
                     </div>

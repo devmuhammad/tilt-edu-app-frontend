@@ -37,7 +37,7 @@ const Question = () => {
             <div className="row">
                 <div className="col-md-12 question-button-container">
                     <div className="btn-toolbar">
-                        <button className="btn question-button btn-success">Questions
+                        <button className="btn question-button ">Questions
                                         <i className="mdi mdi-plus-circle"></i>
                         </button>
                     </div>

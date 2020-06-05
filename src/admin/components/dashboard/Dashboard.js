@@ -60,7 +60,7 @@ const Dashboard  = () => {
                     <div className="col-lg-8 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
-                                <h4 className="card-title">Best sellers</h4>
+                                <h4 className="card-title">Recent Tests</h4>
                                 <div className="table-responsive">
                                     <table className="table">
                                         <thead>
@@ -69,13 +69,10 @@ const Dashboard  = () => {
                                                 Name
                                             </th>
                                             <th>
-                                                Sales
+                                                Average Score
                                             </th>
                                             <th>
-                                                Stock
-                                            </th>
-                                            <th>
-                                                Category
+                                                Date
                                             </th>
                                         </tr>
                                         </thead>
@@ -90,25 +87,7 @@ const Dashboard  = () => {
                                             <td>
                                                 801
                                             </td>
-                                            <td>
-                                                Cynthialand
-                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                Dude You Re Getting A Telescope
-                                            </td>
-                                            <td>
-                                                38667
-                                            </td>
-                                            <td>
-                                                882
-                                            </td>
-                                            <td>
-                                                West Janie
-                                            </td>
-                                        </tr>
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -118,51 +97,13 @@ const Dashboard  = () => {
                     <div className="col-lg-4 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
-                                <h4 className="card-title">Tickets</h4>
-                                <div className="d-flex border-bottom pb-3">
-                                    <img src="../../images/faces/face1.jpg" alt="profile"
-                                         className="img-xs rounded-circle"/>
-                                    <div className="flex-grow-1 ml-3">
-                                        <p>Dollie Ellis</p>
-                                        <div className="d-flex text-muted">
-                                            <p className="mb-0">Friesenview</p>
-                                            <p className="ml-auto mb-0">12:45</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="d-flex border-bottom py-3">
-                                    <img src="../../images/faces/face2.jpg" alt="profile"
-                                         className="img-xs rounded-circle"/>
-                                    <div className="flex-grow-1 ml-3">
-                                        <p>Lillie Long</p>
-                                        <div className="d-flex text-muted">
-                                            <p className="mb-0">Susiehaven</p>
-                                            <p className="ml-auto mb-0">10:33</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="d-flex border-bottom py-3">
-                                    <img src="../../images/faces/face3.jpg" alt="profile"
-                                         className="img-xs rounded-circle"/>
-                                    <div className="flex-grow-1 ml-3">
-                                        <p>Lloyd Harper</p>
-                                        <div className="d-flex text-muted">
-                                            <p className="mb-0">South Hilbert</p>
-                                            <p className="ml-auto mb-0">11:10</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="d-flex pt-3">
-                                    <img src="../../images/faces/face4.jpg" alt="profile"
-                                         className="img-xs rounded-circle"/>
-                                    <div className="flex-grow-1 ml-3">
-                                        <p>Bradley Foster</p>
-                                        <div className="d-flex text-muted">
-                                            <p className="mb-0">Deshawnhaven</p>
-                                            <p className="ml-auto mb-0">13:20</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h4 className="card-title school-title">High Performing Schools</h4>
+                                <table>
+                                    <tr>
+                                        <td>School</td>
+                                        <td>Tests</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>

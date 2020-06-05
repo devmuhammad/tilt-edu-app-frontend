@@ -1,10 +1,7 @@
 import React,{useContext,useState,Fragment} from 'react';
 import {SectionContext, SectionProvider} from './SectionContext';
 import EditSectionModal from "./modal/EditSectionModal";
-import Item from './Item';
 import axios from 'axios';
-import ActionButton from './ActionButtons';
-import sectionsProvider from './SectionContext'
 
 const SectionList = () =>{
     const [sections,setSections] = useContext(SectionContext);
@@ -72,8 +69,6 @@ const SectionList = () =>{
                     />
                 <ul className="menu-items">
                         <DisplayItems setSelSection={setSelSection}></DisplayItems>
-                        {/* {DisplayItems} */}
-                 
                 </ul>
             </Fragment>
         
