@@ -8,7 +8,7 @@ class Login extends Component {
     render() {
         return (
             <AuthContainer
-                title={"Login to TILT"}
+                title={"Login"}
                 info={"Enter your user credentials to login"}
             >
                 <form>

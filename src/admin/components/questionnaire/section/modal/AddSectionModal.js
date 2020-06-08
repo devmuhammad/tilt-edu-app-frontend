@@ -7,15 +7,33 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Modal from 'react-modal';
 import axios from 'axios';
-import {SectionContext} from '../SectionContext';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import { makeStyles,withStyles } from '@material-ui/core/styles';
+import {QstContext} from '../../../questionnaire/Questionnaire';
+import {GroupContext} from '../../../questionnaire/Questionnaire';
+import { Alert, AlertTitle } from '@material-ui/lab';
+import {SectContext} from '../../Questionnaire'
 
-
-
+const useStyles = makeStyles((theme) => ({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+  }));
 
 const AddSectionModal = (props) => {
 
-    const [sections,setSections] = useContext(SectionContext);
-
+    const classes = useStyles();
+    const [groups,setGroups] = useContext(GroupContext);
+    const [loading, setLoading] = useState(false)
+    const [sectionList,setSectionList] = useContext(SectContext);
+    const [groupId, setGroupId] = useState()
     const [name, setName] = useState('');
     const [errors, setErrors] = useState([]);
 
@@ -26,22 +44,54 @@ const AddSectionModal = (props) => {
     };
 
     const data = {
-        name
+        name,
+        group_id:groupId
     };
+
+    const handleChange = (event) => {
+        setGroupId(event.target.value);
+      };
+
+      const getUpdatedSection = () => {
+        axios.get('https://tiltapp-api.herokuapp.com/groups/'+groupId+'/sections').then(res => {
+            if (res.status){
+                setSectionList(sectionList => sectionList = res.data) 
+            }
+            // props.handleToggleClose()
+        }).catch( err => {
+            console.log(err);
+        });
+     }
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
         const  errors = validate();
-        if (Object.keys(errors).length === 0){
-            axios.post('https://tiltapp-api.herokuapp.com/sections',data).then( res => {
-                axios.get('https://tiltapp-api.herokuapp.com/sections').then(res => {
-                    setSections(res.data);
-                    props.handleRemoveModal();
+        if(groupId == undefined){
+        alert("Select a group to add section")
 
-                }).catch( err => {
-                    console.log(err);
-                });
+        return(<Alert severity="error">Select a group to add section !</Alert>)
+        }
+        if (Object.keys(errors).length === 0){
+            setLoading(true)
+            // data.group_id = groupId
+            axios.post('https://tiltapp-api.herokuapp.com/sections',data).then(async res => {
+                if (res.status){
+                  await getUpdatedSection()
+                  setLoading(false)
+
+                    props.handleRemoveModal();
+                    }else {
+                    setLoading(false)
+
+                      return (<Alert severity="error">
+                    <AlertTitle>Error</AlertTitle>
+                    Could not add Section— <strong> {res.message}</strong>
+                  </Alert>)
+                    }
+                
             }).then( err => {
+            setLoading(false)
+
                 console.log(err);
             } );
         }else{
@@ -61,11 +111,25 @@ const AddSectionModal = (props) => {
                     <DialogTitle id="form-dialog-title">Add New Section</DialogTitle>
                     <DialogContent>
                         <form  noValidate autoComplete="off" onSubmit={handleFormSubmit}>
+                        <FormControl variant="outlined" fullWidth style={{margin:0,display:"flex"}} className={classes.formControl}>
+                            <InputLabel id="select-group-label">Group</InputLabel>
+                            <Select
+                            labelId="select-group-label"
+                            id="select-group"
+                            value={groupId}
+                            onChange={handleChange}
+                            label="Group"
+                            >
+                            {groups.map((group,index) => 
+                            <MenuItem key={index} value={group.id}>{group.name}</MenuItem>
+                            )}
+                            </Select>
+                        </FormControl>
                             <div>
                                 <TextField  name="name"  margin="dense"  label="Name" variant="outlined" onChange={ updateName }/>
                             </div>
                             <DialogActions>
-                                <button className={"btn btn-sm btn-success"}>Submit</button>
+                                <button disabled={loading} className={"btn btn-sm btn-success"}>Submit</button>
 
                                 <Button onClick={props.handleRemoveModal} color="secondary">
                                     Cancel

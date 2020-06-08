@@ -28,7 +28,7 @@ class Section extends Component {
                 />
             <Fragment>
             <div className="mail-list-container col-md-3  pb-4 border-right bg-white">
-                <div className=" section-button-content  pb-4 mb-3">
+                <div className=" section-button-content ">
                     <button className="btn section-button " onClick={this.handleClickedForm}>Section
                     <i className="mdi mdi-plus-circle"></i>
                     </button>
