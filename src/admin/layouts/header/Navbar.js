@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect} from 'react';
 import {NavLink} from "react-router-dom";
 import Logo from '../../assets/images/logo/tilt-logo.svg';
 import LightLogo from '../../assets/images/logo/tilt-logo-light.svg';
@@ -6,6 +6,16 @@ import Default from '../../assets/images/default.png';
 // import '../../../assets/css/admin/css/horizontal-layout/style.css';
 
 const Navbar = () => {
+    const [userProfile, setUserProfile] = React.useState({})
+ 
+    useEffect (()=> {
+       
+
+        const usrProfile = JSON.parse(localStorage.getItem('@UserProfile'))
+       
+        setUserProfile(usrProfile)
+    },[])
+
     return (
         <Fragment>
             <div className="horizontal-menu">
@@ -36,7 +46,7 @@ const Navbar = () => {
                                     <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
                                        id="profileDropdown">
                                         <img src={Default} alt="profile"/>
-                                        <span className="nav-profile-name">Akogwu Emmanuel</span>
+                                        <span className="nav-profile-name">{userProfile.fullname}</span>
                                     </a>
                                 </li>
                                 <li className="nav-item nav-toggler-item-right d-lg-none">
@@ -66,12 +76,12 @@ const Navbar = () => {
                                 </NavLink>
                             </li>
 
-                            <li className="nav-item">
+                            {userProfile.roletype === "ADMIN" &&<li className="nav-item">
                                 <a className="nav-link" href="pages/widgets/widgets.html">
                                     <i className="mdi mdi-cash-100 menu-icon"></i>
                                     <span className="menu-title">Financial</span>
                                 </a>
-                            </li>
+                            </li>}
 
                             <li className="nav-item">
                                 <a className="nav-link" href="pages/widgets/widgets.html">

@@ -194,7 +194,7 @@ const AddQuestionModal = (props) => {
             setLoading(false)
 
                 console.log(err);
-            } );
+            });
         }else{
             setErrors(errors)
         }

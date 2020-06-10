@@ -1,9 +1,20 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect} from 'react';
 import Logo from "../../../assets/images/logo/tilt-logo.svg"
 import SocialIconButton from "../../snippets/SocialIconButton";
 import NavActionButton from "../../snippets/NavActionButton";
 
 const Footer = () => {
+
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false)
+
+    useEffect (() => {
+        const usrProfile = JSON.parse(localStorage.getItem('@UserProfile'))
+
+        if (usrProfile == null){
+            setIsLoggedIn(false)
+        }else setIsLoggedIn(true)
+        })
+
     return (
         <Fragment>
             <section className="section py-0">
@@ -47,18 +58,20 @@ const Footer = () => {
                                                 //icon={"fa fa-file-alt"}
                                                 text={"Take The Test"}
                                             />
-                                            <NavActionButton
+                                           {!isLoggedIn && <NavActionButton 
                                                 link={"/auth/login"}
                                                 className={"btn btn-sm btn-pill btn-secondary animate-up-2"}
                                                 //icon={"fa fa-file-alt"}
+                                                disabled={isLoggedIn}
                                                 text={"Login"}
-                                            />
-                                            <NavActionButton
+                                            />}
+                                             {!isLoggedIn && <NavActionButton
                                                 link={"/auth/register"}
                                                 className={"btn btn-sm btn-pill btn-warning animate-up-2"}
+                                                disabled={isLoggedIn}
                                                 //icon={"fa fa-file-alt"}
                                                 text={"Register"}
-                                            />
+                                           /> }
                                         </div>
                                 </div>
                             </div>

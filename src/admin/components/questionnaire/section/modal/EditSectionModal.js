@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
      const [groupId, setGroupId] = useState()
      const [name, setName] = useState('');
      const [errors, setErrors] = useState([]);
+     const [isUpdated, setIsUpdated] = useState(false)
 
     //  console.log(props.section.sectionId)
 
@@ -87,7 +88,11 @@ const useStyles = makeStyles((theme) => ({
 
 
      const handleUpdate = (event) => {
+         
          event.preventDefault();
+         if (!isUpdated){
+            return;
+         }
          const  errors = validate();
          if (Object.keys(errors).length === 0){
             setLoading(true)
@@ -122,6 +127,7 @@ const useStyles = makeStyles((theme) => ({
 
      const updateName = e =>{
          setName(e.target.value);
+         setIsUpdated(true)
      };
 
 
