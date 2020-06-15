@@ -80,7 +80,7 @@ class Login extends Component {
                 
             }).catch( err => {
                 this.setState({loading: false})
-                // alert("Could not login User at this moment, Please try Again")
+                alert("Could not login User at this moment, Please try Again")
                 console.log(err);
             });
         }

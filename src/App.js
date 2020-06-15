@@ -21,12 +21,19 @@ function App (props) {
 
             if (authToken !== null){
                 const config = {
-                    headers: { Authorization: `Bearer${authToken}` }
+                    headers: { Authorization: `Bearer ${authToken}` }
                 };
               
                 
                 // Check if token is still valid or relogin
-                axios.get('http://tiltapp-api.herokuapp.com/auth/get-detail',config).then( res => {
+               await axios({
+                    method: 'GET',
+                    url: 'https://tiltapp-api.herokuapp.com/auth/get-detail',
+                    headers: {
+                      Authorization: `Bearer ${authToken}`
+                    },
+                    
+                  }).then( res => {
                     if(!res.status){
                         history.replace("/auth/login")
                     }else {
@@ -42,12 +49,18 @@ function App (props) {
                         if (path[1] === "admin"){
                             history.replace("/test")
                         }
-                        
+                        history.replace("/test")
                     }
                     }
 
                    }).catch( err => {
-                        console.log(err);
+                        // console.log(err.response);
+                        const res = err.response.data
+                        if(!res.status){
+                            history.replace("/auth/login")
+                        }
+                        // alert(err)
+                        
                    });
 
             } else{

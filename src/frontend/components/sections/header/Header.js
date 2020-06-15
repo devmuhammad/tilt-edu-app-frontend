@@ -33,8 +33,9 @@ const Header = (props) => {
     },[])
 
     const doLog = () => {
+        
         if (logMsg === "Login"){
-            history.push("auth/login")
+            history.push("/auth/login")
         }else logout()
     }
 
@@ -63,8 +64,14 @@ const Header = (props) => {
                 await localStorage.removeItem('@AppT4k3n')
                 await localStorage.removeItem('@UserProfile')
                 setUserProfile({})
+                window.location.reload(false)
             }
-        })
+        }).catch(async  err => {
+            await localStorage.removeItem('@AppT4k3n')
+            await localStorage.removeItem('@UserProfile')
+            setUserProfile({})
+            window.location.reload(false)
+        }  )
     }
 
     return (
@@ -107,13 +114,14 @@ const Header = (props) => {
                            icon={"fa-file-alt"}
                            text={"Take Test"}
                        />
-                       <NavActionButton
+                       <div onClick={doLog}> 
+                           <NavActionButton
                         //    link={"/auth/login"}
-                           onClick={doLog}
+                           
                            className={"btn btn-sm mr-3 text-white btn-pill btn-tertiary animate-up-2"}
                            icon={"fa-unlock"}
                            text={logMsg}
-                       />
+                       /></div>
                         <button className="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"> </span>
