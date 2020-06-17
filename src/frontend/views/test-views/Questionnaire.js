@@ -9,7 +9,10 @@ import ProgressBar from "./view-sections/ProgressBar";
 import QuestionItem from "./view-sections/QuestionItem";
 import PageHeadingButton from "../../components/snippets/PageHeadingButton";
 import {Link} from "react-router-dom";
+import axios from 'axios';
+
 const Helpers = require('../../../helpers/Helpers');
+
 
 class Questionnaire extends Component {
     state = {
@@ -19,21 +22,27 @@ class Questionnaire extends Component {
         completedGroups: [],
         activeSection: {name: null, index: 0},
         sections: [],
+        loading: false,
         completedQuestions: [],
         progress: 0,
         activeQuestions: [],
+        allquestions:[]
+
     };
 
-    componentDidMount() {
+   async componentDidMount() {
+        await this.getQuestns()
+
         this.setState(
             {
                 questionGroups: this.getQuestionGroupNames(),
                 activeGroup: {name: this.getQuestionGroupNames()[0], index: 0},
-                activeColor: this.getQuestionGroup(this.getQuestionGroupNames()[0]).color,
+                activeColor: this.getQuestionGroupNames()[0].color,
                 sections: this.initialSections(),
                 activeSection: {
-                    name: this.initialSections()[0],
-                    index: 0
+                    name: this.initialSections()[0] && this.initialSections()[0] ,
+                    index: 0,
+                    questions: this.initialSections()[0] && this.initialSections()[0].questions 
                 },
                 activeQuestions: this.getNewQuestions(
                     this.getQuestionGroupNames()[0],
@@ -43,7 +52,27 @@ class Questionnaire extends Component {
         );
     }
 
-    initialSections = () => this.getSectionsArray(this.getQuestionGroupNames()[0]);
+    async getQuestns (){
+        await  axios.get('https://tiltapp-api.herokuapp.com/test/get-questions').then( res => {
+            // console.log(res.data)
+                if(res.status){
+                    console.log(res.data)
+                    this.setState({loading:false})
+                    this.setState({allquestions: res.data})
+
+                }  else {
+                this.setState({loading:false})
+                alert("Could not retrieve questions, Please reload")
+                }
+    
+           }).catch( err => {
+            this.setState({loading:false})
+                console.log(err);
+                alert("Error loading questions")
+           });
+    }
+
+    initialSections = () => { return this.getSectionsArray(this.getQuestionGroupNames()[0]) }
 
     getAllQuestionsCount () {
         let questionsCount = 0;
@@ -51,10 +80,10 @@ class Questionnaire extends Component {
             let sections = this.getSections(group);
             for (let section in sections) {
                 if (sections.hasOwnProperty(section)) {
-                    for (let question of sections[section]) {
+                    // for (let question of sections[section]) {
                         questionsCount++;
                     }
-                }
+                // }
             }
         });
         return questionsCount
@@ -64,7 +93,7 @@ class Questionnaire extends Component {
     updateCompletedQuestions = (questionID, answer) => {
         const completedQuestions = this.state.completedQuestions
             .filter((question, index) => question.id !== questionID);
-        completedQuestions.push({id: questionID, answer: answer});
+        completedQuestions.push({questionnaire_id: questionID, weight_point_id: answer});
         this.setState({completedQuestions: completedQuestions})
     };
 
@@ -73,17 +102,20 @@ class Questionnaire extends Component {
         const totalQuestions = this.getAllQuestionsCount();
         const progress = (totalAnswered/totalQuestions)*100;
         this.setState({progress: Math.round(progress)})
+        console.log(this.state.progress)
     }
 
     setActiveSection (activeGroupName, newActiveSectionName) {
         let newSectionIndex = 0;
-        if (this.state.activeSection.index < this.state.sections.length - 1) {
+        if (this.state.activeSection.index < this.getSections(activeGroupName).length - 1) {
             newSectionIndex = this.state.activeSection.index + 1
         }
+        console.log('question Index', newSectionIndex)
         this.setState({
             activeSection: {
                 name: newActiveSectionName,
-                index: newSectionIndex
+                index: newSectionIndex,
+                questions: this.getSections(activeGroupName)[newSectionIndex].questions
             }
         });
     }
@@ -94,7 +126,7 @@ class Questionnaire extends Component {
                 name: activeGroupName,
                 index: this.state.activeGroup.index + 1
             },
-            activeColor: this.getQuestionGroup(activeGroupName).color
+            activeColor: this.getQuestionGroup(this.state.activeGroup.index + 1).color
         });
     }
 
@@ -109,35 +141,44 @@ class Questionnaire extends Component {
     }
 
     getNewQuestions (activeGroupName, activeSectionName) {
-        return this.getSections(activeGroupName)[activeSectionName]
+        // return this.getSections(activeGroupName)[activeSectionName]
+        if(activeSectionName){
+        const questions = activeSectionName.questions
+        return questions
+        }
     }
 
-    getAllQuestions () {
-        return questions;
+     getAllQuestions () {
+        return this.state.allquestions;
+      
     }
 
     getQuestionGroup (questionGroupName) {
+        // console.log(questionGroupName)
         return this.getAllQuestions()[questionGroupName];
     }
 
     getQuestionGroupNames () {
-        return Object.keys(this.getAllQuestions());
+        
+        return this.getAllQuestions();
     }
 
     getSections (questionGroupName) {
-        return this.getQuestionGroup(questionGroupName).sections;
+        return questionGroupName.sections;
     }
 
     getSectionsArray (questionGroup) {
-        return Object.keys(this.getSections(questionGroup))
+        return this.getSections(questionGroup)
     }
 
     buttonGroupColor = (questionGroup) => {
-        if (this.state.activeGroup || this.state.completedGroups.includes(questionGroup)) {
+        
+        if (this.state.activeGroup ){
+            // || this.state.completedGroups.includes(questionGroup)) {
             if (
-                this.state.activeGroup.name === questionGroup ||
-                this.state.completedGroups.includes(questionGroup)) {
-                return this.getAllQuestions()[questionGroup].color
+                this.state.activeGroup.name.name === questionGroup.name){
+                // this.state.completedGroups.includes(questionGroup)) {
+                return questionGroup.color
             }
         }
         return "gray-300"
@@ -145,9 +186,15 @@ class Questionnaire extends Component {
 
     handleNext = (e) => {
         e.preventDefault();
-        let activeSection = this.state.sections[this.state.activeSection.index + 1];
+        // let actvSectionIndx = 0
+        // if (this.state.sections.length === 0){
+        //     this.setState({activeSection: {index: 0}})
+
+        // }
         let activeGroupName = this.state.activeGroup.name;
-        if (this.state.activeSection.index < this.state.sections.length - 1) {
+
+        let activeSection = this.getSections(activeGroupName)[this.state.activeSection.index + 1];
+        if (this.state.activeSection.index < this.getSections(activeGroupName).length - 1) {
             this.setActiveSection(activeGroupName, activeSection);
             this.setActiveQuestions(activeGroupName, activeSection);
         } else {
@@ -157,7 +204,7 @@ class Questionnaire extends Component {
                 completedGroups: currentCompletedGroups
             });
             activeGroupName = this.state.questionGroups[this.state.activeGroup.index + 1];
-            activeSection = this.getSectionsArray(activeGroupName)[0];
+            activeSection = this.getSectionsArray(activeGroupName)[this.state.activeSection.index + 1];
             console.log(activeGroupName, activeSection);
             this.setActiveGroup(activeGroupName);
             this.setActiveSection(activeGroupName, activeSection);
@@ -165,9 +212,11 @@ class Questionnaire extends Component {
         }
     };
 
-    handleAnswer = (questionID, answer) => {
-        this.updateCompletedQuestions(questionID, answer);
-        this.setProgress();
+    handleAnswer = async (questionID, answer) => {
+
+        await this.updateCompletedQuestions(questionID, answer);
+         this.setProgress();
+
     };
 
     renderQuestionGroups = () => {
@@ -179,42 +228,52 @@ class Questionnaire extends Component {
                     variant={this.buttonGroupColor(group)}
                 >
                     <span>
-                        <i className={`far fa-3x fa-${this.getQuestionGroup(group).icon} pl-2 pr-2`}> </i>
+                        <i className={`far fa-3x fa-${group.icon} pl-2 pr-2`}> </i>
                     </span>
-                    {group.toUpperCase()}
+                    {group.name.toUpperCase()}
                 </Button>
             )
         })
     };
 
     renderSections = () => {
-        return this.state.sections ?
-            this.state.sections.map((section, index) => (
-                <Step key={section + index}>
-                    <StepLabel>{Helpers.titleCase(section)}</StepLabel>
+        const grpSect = this.state.activeGroup.name;
+
+        if(grpSect != null){ 
+        return grpSect.sections.length >= 1 ?
+            grpSect.sections.map((section, index) => (
+                <Step key={section + index} >
+                    <StepLabel >{Helpers.titleCase(section.name)}</StepLabel>
                 </Step>
-            )) :
-            this.showSpinner("lg")
+            )) : <span style={{fontSize:20,fontWeight:"700",color:"grey", justifySelf:"center"}}>No Section for this Group</span>
+            }else return <span style={{fontSize:20,fontWeight:"700",color:"grey", justifySelf:"center"}}>No Section for this Group</span>
     };
 
     renderQuestions = () => {
         const activeGroupName = this.state.activeGroup.name;
         const activeSectionName = this.state.activeSection.name;
-        console.log(activeGroupName, this.state.activeSection);
-        if (activeGroupName && activeSectionName) {
-            const activeQuestion =
-                this.getNewQuestions(activeGroupName, activeSectionName);
+        console.log(activeSectionName)
+        // console.log(activeGroupName, this.state.activeSection);
+        if( activeSectionName != undefined && activeSectionName != null){
+        if (activeGroupName && activeSectionName.questions.length >= 1) {
+            
+            const activeQuestion = this.state.activeSection.name.questions
+                // this.getNewQuestions(activeGroupName, activeSectionName);
             return activeQuestion.map((questionObject, index) => (
                 <QuestionItem
                     key={index}
                     question={questionObject.question}
+                    weight_points={questionObject.weight_points}
                     color={this.state.activeColor}
-                    onAnswer={(value) => this.handleAnswer(questionObject.id, value)}
+                    onAnswer={(value) => this.handleAnswer(questionObject.questionnaire_id, value)}
                 />
             ))
         } else {
-            return this.showSpinner()
+            return <span style={{fontSize:20,fontWeight:"700",color:"grey",marginLeft:20, justifySelf:"center"}}>No Questions in this section</span>
         }
+    }else {
+        return <span style={{fontSize:20,fontWeight:"700",color:"grey",marginLeft:20, justifySelf:"center"}}>No Questions in this section</span>
+    }
     };
 
     showSpinner = (size = "lg", color = "primary") => (
@@ -257,14 +316,14 @@ class Questionnaire extends Component {
                 <Section>
                     <div className="w-100" >
                         <Stepper
-                            activeStep={this.state.activeSection.index}
+                            activeStep={this.state.activeSection && this.state.activeSection.index}
                             alternativeLabel
                         >
                             {this.renderSections()}
                         </Stepper>
                     </div>
                 </Section>
-
+                {this.state.loading ? this.showSpinner("lg") :
                 <div className="mb-10 mt-5">
                     <Section>
                         {this.renderQuestions()}
@@ -280,7 +339,7 @@ class Questionnaire extends Component {
                             <Link to={"/test/summary-result"} className={"lead"}>Get Result</Link>
                         </div>
                     </Section>
-                </div>
+                </div>}
             </main>
         );
     }
