@@ -21,8 +21,8 @@ const QuestionItem = (props) => {
                         onChange={value => props.onAnswer(value)}
                         defaultValue={0}
                     >
-                            <ToggleButton value={weight_points[4].weight_point_id} bsPrefix={`btn Button mr-1 ml-1 p-2 mr-lg-4 ml-lg-4 rounded-circle btn-outline-${props.color}`}/>
-                            <ToggleButton value={weight_points[3].weight_point_id} bsPrefix={`btn Button mr-1 ml-1 p-2 rounded-circle btn-outline-${props.color} mr-lg-5 ml-lg-5`}/>
+                            <ToggleButton value={weight_points[4].weight_point_id} bsPrefix={`btn Button mr-1 ml-1 p-2 mr-lg-4 ml-lg-4 rounded-circle btn-outline-gray-800`}/>
+                            <ToggleButton value={weight_points[3].weight_point_id} bsPrefix={`btn Button mr-1 ml-1 p-2 rounded-circle btn-outline-gray-600 mr-lg-5 ml-lg-5`}/>
                             <ToggleButton value={weight_points[2].weight_point_id} bsPrefix="btn Button mr-1 ml-1 p-2 rounded-circle btn-outline-gray-500 mr-lg-5 ml-lg-5"/>
                             <ToggleButton value={weight_points[1].weight_point_id} bsPrefix="btn Button mr-1 ml-1 p-2 rounded-circle btn-outline-gray-600 mr-lg-5 ml-lg-5"/>
                             <ToggleButton value={weight_points[0].weight_point_id} bsPrefix="btn Button mr-1 ml-1 p-2 rounded-circle btn-outline-gray-800 mr-lg-4 ml-lg-4"/>

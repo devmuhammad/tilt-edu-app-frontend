@@ -26,7 +26,9 @@ class Questionnaire extends Component {
         completedQuestions: [],
         progress: 0,
         activeQuestions: [],
-        allquestions:[]
+        allquestions:[],
+        actvQuest:[]
+        
 
     };
 
@@ -56,7 +58,6 @@ class Questionnaire extends Component {
         await  axios.get('https://tiltapp-api.herokuapp.com/test/get-questions').then( res => {
             // console.log(res.data)
                 if(res.status){
-                    console.log(res.data)
                     this.setState({loading:false})
                     this.setState({allquestions: res.data})
 
@@ -102,22 +103,27 @@ class Questionnaire extends Component {
         const totalQuestions = this.getAllQuestionsCount();
         const progress = (totalAnswered/totalQuestions)*100;
         this.setState({progress: Math.round(progress)})
-        console.log(this.state.progress)
+        // console.log(this.state.progress)
     }
 
-    setActiveSection (activeGroupName, newActiveSectionName) {
+    setActiveSection (activeGroupName, newActiveSectionName, currIndex) {
         let newSectionIndex = 0;
-        if (this.state.activeSection.index < this.getSections(activeGroupName).length - 1) {
+        
+        if (newSectionIndex < this.getSections(activeGroupName).length - 1 ) {
             newSectionIndex = this.state.activeSection.index + 1
         }
-        console.log('question Index', newSectionIndex)
+        if (currIndex == 0){
+            newSectionIndex = currIndex
+        }
+        const sectQuestions = this.getSections(activeGroupName)[newSectionIndex].questions
         this.setState({
             activeSection: {
-                name: newActiveSectionName,
+                name: this.getSections(activeGroupName)[newSectionIndex],
                 index: newSectionIndex,
-                questions: this.getSections(activeGroupName)[newSectionIndex].questions
+                // questions: [...sectQuestions]
             }
         });
+        // this.setState(state => ( state.actvQuest.concat(sectQuestions))
     }
 
     setActiveGroup (activeGroupName) {
@@ -184,7 +190,7 @@ class Questionnaire extends Component {
         return "gray-300"
     };
 
-    handleNext = (e) => {
+    handleNext = async (e) => {
         e.preventDefault();
         // let actvSectionIndx = 0
         // if (this.state.sections.length === 0){
@@ -192,7 +198,7 @@ class Questionnaire extends Component {
 
         // }
         let activeGroupName = this.state.activeGroup.name;
-
+    //    await  this.setState({activeSection: {index: this.state.activeSection.index + 1}})
         let activeSection = this.getSections(activeGroupName)[this.state.activeSection.index + 1];
         if (this.state.activeSection.index < this.getSections(activeGroupName).length - 1) {
             this.setActiveSection(activeGroupName, activeSection);
@@ -203,11 +209,14 @@ class Questionnaire extends Component {
             this.setState({
                 completedGroups: currentCompletedGroups
             });
+            const currIndex = 0
             activeGroupName = this.state.questionGroups[this.state.activeGroup.index + 1];
-            activeSection = this.getSectionsArray(activeGroupName)[this.state.activeSection.index + 1];
-            console.log(activeGroupName, activeSection);
+            activeSection = this.getSections(activeGroupName)[this.state.activeSection.index + 1];
+            // console.log(activeGroupName, activeSection);
+            // await  this.setState({activeSection: {index: 0}})
+            
             this.setActiveGroup(activeGroupName);
-            this.setActiveSection(activeGroupName, activeSection);
+            this.setActiveSection(activeGroupName, activeSection,currIndex);
             this.setActiveQuestions(activeGroupName, activeSection);
         }
     };
@@ -252,14 +261,17 @@ class Questionnaire extends Component {
     renderQuestions = () => {
         const activeGroupName = this.state.activeGroup.name;
         const activeSectionName = this.state.activeSection.name;
-        console.log(activeSectionName)
-        // console.log(activeGroupName, this.state.activeSection);
+    
         if( activeSectionName != undefined && activeSectionName != null){
         if (activeGroupName && activeSectionName.questions.length >= 1) {
-            
             const activeQuestion = this.state.activeSection.name.questions
                 // this.getNewQuestions(activeGroupName, activeSectionName);
+                console.log(this.state.activeColor)
+                if( this.state.activeColor == ''){
+                    this.setState({activeColor: 'secondary'})
+                }
             return activeQuestion.map((questionObject, index) => (
+                
                 <QuestionItem
                     key={index}
                     question={questionObject.question}
