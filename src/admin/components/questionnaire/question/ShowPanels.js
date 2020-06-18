@@ -45,9 +45,10 @@ function Alert(props) {
 
     React.useEffect (() => {
 
+        
      setWeightPoint(weight_point => weight_point = qst.weight_points)
      
-        // setDetails()
+        setDetails()
     },[props,weight_point])
 
     const setDetails = async () => {
@@ -151,7 +152,7 @@ function Alert(props) {
      }
 
     const handleFormSubmit = (event) => {
-        
+        event.preventDefault()
         if(sectId == undefined || sectId == 0){
            return alert("Kindly reselect a section to update questions")
       

@@ -23,6 +23,13 @@ function App (props) {
                 const config = {
                     headers: { Authorization: `Bearer ${authToken}` }
                 };
+
+                // Create session before taking test
+                // const path = location.pathname.split("/")
+                //         if(path[2] === "take-test"){
+                //             history.replace("/")
+                //         }
+                // if()
               
                 
                 // Check if token is still valid or relogin
