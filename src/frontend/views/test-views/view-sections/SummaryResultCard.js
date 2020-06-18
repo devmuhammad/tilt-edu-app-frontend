@@ -16,11 +16,11 @@ const SummaryResultCard = (props) => {
                         <div className="container text-center mb-3">
                             {
                                 props.sections
-                                    .map((section, index, sections) => {
+                                    .map((section, index) => {
                                         return (
                                             <p
                                                 key={Math.round(Math.random()*100) + index}
-                                                className={`${index !== sections.length + 1 ? "border-bottom" : null} m-0`}
+                                                className={`${index !== props.sections.length + 1 ? "border-bottom" : null} m-0`}
                                             >
                                                 {Helpers.titleCase(section)}
                                             </p>

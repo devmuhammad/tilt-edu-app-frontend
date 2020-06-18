@@ -13,7 +13,7 @@ const Footer = () => {
         if (usrProfile == null){
             setIsLoggedIn(false)
         }else setIsLoggedIn(true)
-        })
+        },[])
 
     return (
         <Fragment>

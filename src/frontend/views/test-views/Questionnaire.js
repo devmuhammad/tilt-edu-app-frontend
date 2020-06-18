@@ -27,7 +27,9 @@ class Questionnaire extends Component {
         progress: 0,
         activeQuestions: [],
         allquestions:[],
-        actvQuest:[]
+        actvQuest:[],
+        complete:false,
+        sloading:false,
         
 
     };
@@ -58,6 +60,7 @@ class Questionnaire extends Component {
         await  axios.get('https://tiltapp-api.herokuapp.com/test/get-questions').then( res => {
             // console.log(res.data)
                 if(res.status){
+                    
                     this.setState({loading:false})
                     this.setState({allquestions: res.data})
 
@@ -126,7 +129,11 @@ class Questionnaire extends Component {
         // this.setState(state => ( state.actvQuest.concat(sectQuestions))
     }
 
-    setActiveGroup (activeGroupName) {
+    setActiveGroup (activeGroupName, currIndex ) {
+
+        
+
+
         this.setState({
             activeGroup: {
                 name: activeGroupName,
@@ -134,6 +141,8 @@ class Questionnaire extends Component {
             },
             activeColor: this.getQuestionGroup(this.state.activeGroup.index + 1).color
         });
+        
+
     }
 
     setNewSections (activeGroup) {
@@ -190,17 +199,57 @@ class Questionnaire extends Component {
         return "gray-300"
     };
 
+
+    submitQuestions = async (e) => {
+        e.preventDefault();
+        this.setState({sloading:true})
+
+
+        if (this.state.completedQuestions.length == 0 ){
+            alert("You did not answer any Questionnaire")
+            return;
+        }
+
+        let testSession = {}
+        testSession.session_id = localStorage.getItem('@TstS3ssion')
+        testSession.questionnaire = this.state.completedQuestions
+
+        await  axios.post('https://tiltapp-api.herokuapp.com/test/submit', testSession).then( res => {
+            
+                if(res.status){
+                   
+                    this.setState({sloading:false})
+                    localStorage.removeItem('@TstS3ssion')
+                    this.props.history.replace('/test/summary-result',{sessionId : testSession.session_id})
+
+                }  else {
+                this.setState({loading:false})
+                alert("Could not submit test, Please reload")
+                }
+    
+           }).catch( err => {
+            this.setState({sloading:false})
+                // console.log(err);
+                alert("Error submitting Test")
+           });
+    }
+
+
     handleNext = async (e) => {
         e.preventDefault();
-        // let actvSectionIndx = 0
-        // if (this.state.sections.length === 0){
-        //     this.setState({activeSection: {index: 0}})
-
-        // }
+        
         let activeGroupName = this.state.activeGroup.name;
-    //    await  this.setState({activeSection: {index: this.state.activeSection.index + 1}})
+        // }
+        if (this.state.activeGroup.index == this.getQuestionGroupNames().length-1){
+            if (this.state.activeSection.index == this.getSections(activeGroupName).length-2){
+               
+                this.setState({complete: true})
+                
+            }
+        }
+
         let activeSection = this.getSections(activeGroupName)[this.state.activeSection.index + 1];
-        if (this.state.activeSection.index < this.getSections(activeGroupName).length - 1) {
+        if (this.state.activeSection.index < this.getSections(activeGroupName).length -1) {
             this.setActiveSection(activeGroupName, activeSection);
             this.setActiveQuestions(activeGroupName, activeSection);
         } else {
@@ -210,12 +259,14 @@ class Questionnaire extends Component {
                 completedGroups: currentCompletedGroups
             });
             const currIndex = 0
-            activeGroupName = this.state.questionGroups[this.state.activeGroup.index + 1];
-            activeSection = this.getSections(activeGroupName)[this.state.activeSection.index + 1];
-            // console.log(activeGroupName, activeSection);
-            // await  this.setState({activeSection: {index: 0}})
             
-            this.setActiveGroup(activeGroupName);
+            activeGroupName = this.getQuestionGroupNames()[this.state.activeGroup.index + 1];
+            this.setState({activeGroup: { index:this.state.activeGroup.index }})
+            this.setActiveGroup(activeGroupName, currIndex);
+            
+            activeSection = this.getSections(activeGroupName)[this.state.activeSection.index + 1];
+        
+            
             this.setActiveSection(activeGroupName, activeSection,currIndex);
             this.setActiveQuestions(activeGroupName, activeSection);
         }
@@ -266,9 +317,8 @@ class Questionnaire extends Component {
         if (activeGroupName && activeSectionName.questions.length >= 1) {
             const activeQuestion = this.state.activeSection.name.questions
                 // this.getNewQuestions(activeGroupName, activeSectionName);
-                console.log(this.state.activeColor)
                 if( this.state.activeColor == ''){
-                    this.setState({activeColor: 'secondary'})
+                    this.setState({activeColor: 'primary'})
                 }
             return activeQuestion.map((questionObject, index) => (
                 
@@ -298,7 +348,7 @@ class Questionnaire extends Component {
     );
 
     render () {
-        console.log(this.state.completedQuestions);
+        
         return (
             <main>
                 <PageHeadingSection
@@ -340,16 +390,23 @@ class Questionnaire extends Component {
                     <Section>
                         {this.renderQuestions()}
                         <div className="container d-flex justify-content-center">
-                            <PageHeadingButton
-                                icon={"fa-arrow-right"}
-                                text={"Next"}
-                                color={this.state.activeColor}
-                                onClick={(e) => this.handleNext(e)}
-                            />
+                        {this.state.sloading ? this.showSpinner("lg") : <span> 
+                            {this.state.complete ? <PageHeadingButton
+                                icon={"fa-send"}
+                                text={"Submit"}
+                                color={this.state.activeColor || 'gray'}
+                                onClick={(e) => this.submitQuestions(e)}
+                            />: <PageHeadingButton
+                            icon={"fa-arrow-right"}
+                            text={"Next"}
+                            color={this.state.activeColor || 'gray'}
+                            onClick={(e) => this.handleNext(e)}
+                        />}
+                        </span> }
                         </div>
-                        <div className="container d-flex justify-content-center mt-8">
+                        {/* <div className="container d-flex justify-content-center mt-8">
                             <Link to={"/test/summary-result"} className={"lead"}>Get Result</Link>
-                        </div>
+                        </div> */}
                     </Section>
                 </div>}
             </main>

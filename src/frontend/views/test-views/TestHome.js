@@ -5,6 +5,7 @@ import EvaluationStagesSection from "../../components/sections/evaluation-stages
 import PageHeadingButton from "../../components/snippets/PageHeadingButton";
 import SectionHeading from "../../components/sections/SectionHeading";
 import axios from 'axios';
+import { Spinner} from "react-bootstrap";
 
 
 class TestHome extends Component {
@@ -43,6 +44,15 @@ class TestHome extends Component {
            });
     }
 
+    showSpinner = (size = "lg", color = "secondary") => (
+        <Spinner
+            animation="grow"
+            size={size}
+            aria-hidden="true"
+            variant={color}
+        />
+    );
+
 
     render() {
         return (
@@ -50,14 +60,15 @@ class TestHome extends Component {
                 <PageHeadingSection textColor={"primary"} headingImage={PageHeadingImage}>
                     <h1 className="font-weight-bold text-gray display-1">Welcome To The Test</h1>
                     <h3 className="font-weight-light">Together we will find the cause of each learning deficiency</h3>
-                    <div >
-                    <PageHeadingButton
+                    <div  className="d-flex justify-content-center">
+                    {this.state.loading ? this.showSpinner("lg") : <PageHeadingButton
                         onClick={this.newTestSession}
                         // link={"/test/take-test"}
                         text={"Begin The Test"}
                         icon={"fa-arrow-right"}
                         color={"secondary"}
-                    /></div>
+                    />}
+                    </div>
                     <h3 className="pt-4 mb-0 text-tertiary">Patiently answer every question honestly</h3>
                     <p className="lead pt-0">Ask your teacher or guardian to explain any question you do not clearly understand</p>
                     <SectionHeading
@@ -69,13 +80,13 @@ class TestHome extends Component {
                 </PageHeadingSection>
                 <EvaluationStagesSection />
                 <div className="d-flex justify-content-center pb-8 pt-lg-4">
-                    <PageHeadingButton
+                {this.state.loading ? this.showSpinner("lg") :<PageHeadingButton
                         onClick={this.newTestSession}
                         // link={"/test/take-test"}
                         text={"Begin The Test"}
                         icon={"fa-arrow-right"}
                         color={"secondary"}
-                    />
+                    />}
                 </div>
             </main>
         );

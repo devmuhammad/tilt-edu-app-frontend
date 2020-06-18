@@ -6,10 +6,45 @@ import SummaryResultCard from "./view-sections/SummaryResultCard";
 import summaryResults from "./data/summaryResults";
 import PageHeadingButton from "../../components/snippets/PageHeadingButton";
 import SocialIconButton from "../../components/snippets/SocialIconButton";
+import axios from 'axios';
+
+
 const Helpers = require('../../../helpers/Helpers')
 
 
 class Result extends Component {
+
+    state ={
+        results : [],
+        currSession: ''
+    }
+
+   async componentDidMount(){
+       await this.getResults()
+    }
+
+    async getResults (){
+
+        const currSession = this.props.location.state.sessionId
+        this.setState({currSession: currSession})
+        await  axios.get('https://tiltapp-api.herokuapp.com/test/result/'+currSession+'/summary').then(async res => {
+            
+                if(res.data.status){
+                    
+                    this.setState({loading:false})
+                    await this.setState({results : res.data.data})
+                    
+                }  else {
+                this.setState({loading:false})
+                alert("Could not retrieve result for this session, Please reload")
+                }
+    
+           }).catch( err => {
+            this.setState({loading:false})
+                console.log(err);
+                alert("Error loading result")
+           });
+    }
 
     getSectionsNamesArray (questionGroupName) {
         return Object.keys(summaryResults[questionGroupName].sections);
@@ -23,17 +58,27 @@ class Result extends Component {
         return summaryResults[questionGroupName];
     }
 
+    completeResult = () => {
+        const usrProfile = JSON.parse(localStorage.getItem('@UserProfile'))
+
+        if(usrProfile == null){
+            alert("You must have an account to access complete result")
+            this.props.history.push("/auth/register",{sessionId: this.state.currSession})
+        }
+    }
+
     renderSummaryResultCards = () => {
-        return this.getQuestionGroupNamesArray()
-            .map((groupName, index) => {
+        
+        return this.state.results
+            .map((result, index) => {
                 return (
                     <SummaryResultCard
-                        key={groupName}
-                        group={Helpers.titleCase(groupName)}
-                        sections={this.getSectionsNamesArray(groupName)}
-                        icon={this.getQuestionGroup(groupName).icon}
-                        color={this.getQuestionGroup(groupName).color}
-                        score={this.getQuestionGroup(groupName).score}
+                        key={result + index}
+                        group={result.group_name}
+                        sections={result.sections}
+                        icon={result.icon}
+                        color={result.color}
+                        score={result.percentage}
                     />
                 )
             })
@@ -62,7 +107,8 @@ class Result extends Component {
                    <PageHeadingButton
                        text={"Get Complete Result"}
                        color={"secondary"}
-                       href={"#"}
+                    //    href={"#"}
+                        onClick={(e) => this.completeResult(e)}
                    />
                </div>
                <div  style={{backgroundColor: "#E5F3FF"}}>

@@ -16,8 +16,10 @@ const Header = (props) => {
     const [userProfile, setUserProfile] = React.useState({})
     const [logMsg, setLogMsg] = React.useState("")
     const [open, setOpen] = React.useState("")
+    const [isTest, setIsTest]= React.useState(false)
 
     const history = useHistory();
+    const location = useLocation()
 
 
     useEffect (()=> {
@@ -30,6 +32,9 @@ const Header = (props) => {
         }else setLogMsg("Logout")
        
         setUserProfile(usrProfile)
+        if (location.pathname == '/test'){
+            setIsTest(true)
+        }
     },[])
 
     const doLog = () => {
@@ -108,12 +113,12 @@ const Header = (props) => {
                         <NavigationLinks/>
                     </div>
                     <div className="d-flex align-items-center">
-                       <NavActionButton
+                       {!isTest && <NavActionButton
                            link={"/test"}
                            className={"btn mr-3 btn-pill btn-secondary animate-up-2"}
                            icon={"fa-file-alt"}
                            text={"Take Test"}
-                       />
+                       />}
                        <div onClick={doLog}> 
                            <NavActionButton
                         //    link={"/auth/login"}

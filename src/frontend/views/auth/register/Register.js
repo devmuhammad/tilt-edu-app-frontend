@@ -62,7 +62,8 @@ class Register extends Component {
             "middle_name":"",
             "email":"",
             "phone_number":"",
-            "password":""
+            "password":"",
+            "session_id":""
         },
         termsAgree:false,
         termsAgreed:false,
@@ -73,6 +74,11 @@ class Register extends Component {
 
 // }
     componentDidMount() {
+
+        if (this.props.location.state){
+            this.setState({learnerInfo: {session_id: this.props.location.state.sessionId}})
+            
+            }
 
         this.setDetails()
     }
