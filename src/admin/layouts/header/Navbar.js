@@ -3,10 +3,26 @@ import {NavLink} from "react-router-dom";
 import Logo from '../../assets/images/logo/tilt-logo.svg';
 import LightLogo from '../../assets/images/logo/tilt-logo-light.svg';
 import Default from '../../assets/images/default.png';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 // import '../../../assets/css/admin/css/horizontal-layout/style.css';
+import ChangePwd from '../../../frontend/components/sections/header/Changepwd'
+import UpdateProfile from '../../../frontend/components/sections/header/UpdateProfile'
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import axios from 'axios';
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
 const Navbar = () => {
     const [userProfile, setUserProfile] = React.useState({})
+    const [clickedForm, setClickedForm] = React.useState(undefined)
+    const [openedForm, setOpenedForm] = React.useState(undefined)
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [open, setOpen] = React.useState(false)
+
  
     useEffect (()=> {
        
@@ -16,13 +32,72 @@ const Navbar = () => {
         setUserProfile(usrProfile)
     },[])
 
+    const openMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+    
+      const closeMenu = () => {
+        setAnchorEl(null);
+      };
+
+      const  handleClick = () => {
+        setOpen(true)
+      };
+    
+     const  handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false)
+
+      };
+
+   
+    const changePwd = () =>{
+        closeMenu()
+        setClickedForm(1)
+    };
+    const editProfile = () =>{
+        closeMenu()
+        setOpenedForm(1)
+    };
+
+
+    const handleRemoveModal = () => {
+        // this.setState( () =>({clickedForm:undefined}))
+        setOpenedForm(undefined)
+        setClickedForm(undefined)
+    };
+
+    const logout = async () =>{
+        const Token = await JSON.parse(localStorage.getItem('@AppT4k3n'))
+
+        const config = {
+            headers: { Authorization: `Bearer${Token}` }
+        };
+       await axios.post('https://tiltapp-api.herokuapp.com/auth/logout',config).then(async res => {
+            if (res.status){
+                await localStorage.removeItem('@AppT4k3n')
+                await localStorage.removeItem('@UserProfile')
+                setUserProfile({})
+                window.location.reload(false)
+            }
+        }).catch(async  err => {
+            await localStorage.removeItem('@AppT4k3n')
+            await localStorage.removeItem('@UserProfile')
+            setUserProfile({})
+            window.location.reload(false)
+        }  )
+    }
+
     return (
         <Fragment>
             <div className="horizontal-menu">
                 <nav className="navbar top-navbar col-lg-12 col-12 p-0 bg-soft">
                     <div className="container">
                         <div className="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
-
+                            
                             <div className="text-center navbar-brand-wrapper d-flex align-items-start justify-content-start">
                                 <NavLink to={"/admin"} className={"navbar-brand brand-logo"}>
                                     <img src={Logo} alt="logo"/>
@@ -31,24 +106,50 @@ const Navbar = () => {
                                 <NavLink to={"/admin"} className={"navbar-brand brand-logo-mini"}>
                                     <img src={LightLogo} alt="logo"/>
                                 </NavLink>
-
+                                <ChangePwd
+                                clickedForm={clickedForm}
+                                showSuccess={handleClick}
+                                handleRemoveModal={handleRemoveModal}
+                            />
+                            <UpdateProfile
+                                openedForm={openedForm}
+                                showSuccess={handleClick}
+                                handleRemoveModal={handleRemoveModal}
+                            />
+                            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                                <Alert onClose={handleClose} severity="success">
+                                Success ! Logged Out
+                                </Alert>
+                                </Snackbar>
                             </div>
                             <ul className="navbar-nav navbar-nav-right">
                                 <li className="nav-item dropdown">
                                     <a className="nav-link count-indicator dropdown-toggle"
-                                       id="notificationDropdown" href="#"
+                                       id="notificationDropdown" 
                                        data-toggle="dropdown">
                                         <i className="mdi mdi-bell-outline mx-0"></i>
                                         <span className="count"></span>
                                     </a>
                                 </li>
-                                <li className="nav-item nav-profile dropdown">
-                                    <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+                                <li className="nav-item nav-profile dropdown" onClick={openMenu}>
+                                    <a className="nav-link dropdown-toggle"  data-toggle="dropdown"
                                        id="profileDropdown">
                                         <img src={Default} alt="profile"/>
-                                        <span className="nav-profile-name">{userProfile.fullname}</span>
+                                        <span className="nav-profile-name">{userProfile && userProfile.fullname}</span>
                                     </a>
+                                    
                                 </li>
+                                <Menu
+                                        id="simple-menu"
+                                        anchorEl={anchorEl}
+                                        keepMounted
+                                        open={Boolean(anchorEl)}
+                                        onClose={closeMenu}
+                                            >
+                                        <MenuItem onClick={editProfile}>Edit Profile</MenuItem>
+                                        <MenuItem onClick={changePwd}>Change Password</MenuItem>
+                                        <MenuItem onClick={logout}>Logout</MenuItem>
+                                    </Menu>
                                 <li className="nav-item nav-toggler-item-right d-lg-none">
                                     <button className="navbar-toggler align-self-center" type="button"
                                             data-toggle="horizontal-menu-toggle">
@@ -84,10 +185,10 @@ const Navbar = () => {
                             </li>}
 
                             <li className="nav-item">
-                                <a className="nav-link" href="pages/widgets/widgets.html">
-                                    <i className="mdi mdi-account-multiple menu-icon"></i>
-                                    <span className="menu-title">Manage Users</span>
-                                </a>
+                                    <NavLink to={"/admin/user-manager"} className={"nav-link"} >
+                                        <i className="mdi mdi-magnet menu-icon"></i>
+                                        <span className="menu-title">Manage Users</span>
+                                    </NavLink>
                             </li>
 
                             <li className="nav-item">

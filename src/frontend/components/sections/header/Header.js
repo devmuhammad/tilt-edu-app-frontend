@@ -7,6 +7,12 @@ import axios from 'axios';
 import { withRouter } from 'react-router'; 
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import ChangePwd from './Changepwd';
+import IconButton from '@material-ui/core/IconButton';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import UpdateProfile from './UpdateProfile';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -15,8 +21,12 @@ function Alert(props) {
 const Header = (props) => {
     const [userProfile, setUserProfile] = React.useState({})
     const [logMsg, setLogMsg] = React.useState("")
-    const [open, setOpen] = React.useState("")
+    const [open, setOpen] = React.useState(false)
     const [isTest, setIsTest]= React.useState(false)
+    const [canPwd, setPwd] = React.useState(false)
+    const [clickedForm, setClickedForm] = React.useState(undefined)
+    const [openedForm, setOpenedForm] = React.useState(undefined)
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
     const history = useHistory();
     const location = useLocation()
@@ -29,13 +39,26 @@ const Header = (props) => {
 
         if (usrProfile == null){
             setLogMsg("Login")
-        }else setLogMsg("Logout")
+            setPwd(false)
+        }else{
+        setPwd(true)
+        setLogMsg("Logout")
+        }
        
         setUserProfile(usrProfile)
         if (location.pathname == '/test'){
             setIsTest(true)
         }
     },[])
+
+    const openMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+    
+      const closeMenu = () => {
+        setAnchorEl(null);
+      };
+
 
     const doLog = () => {
         
@@ -56,6 +79,23 @@ const Header = (props) => {
         setOpen(false)
 
       };
+
+   
+    const changePwd = () =>{
+        closeMenu()
+        setClickedForm(1)
+    };
+    const editProfile = () =>{
+        closeMenu()
+        setOpenedForm(1)
+    };
+
+
+    const handleRemoveModal = () => {
+        // this.setState( () =>({clickedForm:undefined}))
+        setOpenedForm(undefined)
+        setClickedForm(undefined)
+    };
     
 
     const logout = async () =>{
@@ -84,11 +124,21 @@ const Header = (props) => {
             <nav id="navbar-main"
                 className={`navbar navbar-main navbar-expand-lg navbar-transparent navbar-${props.navBarType} navbar-theme-primary headroom py-lg-2 px-lg-6`}>
                 <div className="container">
+                <ChangePwd
+                    clickedForm={clickedForm}
+                    showSuccess={handleClick}
+                    handleRemoveModal={handleRemoveModal}
+                />
+                <UpdateProfile
+                    openedForm={openedForm}
+                    showSuccess={handleClick}
+                    handleRemoveModal={handleRemoveModal}
+                />
                     <NavLogo/>
                     <div className="navbar-collapse collapse" id="navbar_global">
                     <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity="success">
-                    Success ! Logged Out
+                    Success ! DONE
                     </Alert>
                     </Snackbar>
                         <div className="navbar-collapse-header">
@@ -113,12 +163,28 @@ const Header = (props) => {
                         <NavigationLinks/>
                     </div>
                     <div className="d-flex align-items-center">
-                       {!isTest && <NavActionButton
+                       {/* {!isTest && <NavActionButton
                            link={"/test"}
-                           className={"btn mr-3 btn-pill btn-secondary animate-up-2"}
+                           className={"btn btn-sm mr-3 btn-pill btn-secondary animate-up-2"}
                            icon={"fa-file-alt"}
                            text={"Take Test"}
-                       />}
+                       />} */}
+                       {canPwd && <div className={" mr-3 animate-up-2"}>
+                       <IconButton color="primary" aria-label="account" component="span" onClick={openMenu}>
+                        <AccountCircleIcon fontSize="large" />
+                        </IconButton>
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={closeMenu}
+                        >
+                            <MenuItem onClick={editProfile}>Edit Profile</MenuItem>
+                            <MenuItem onClick={changePwd}>Change Password</MenuItem>
+                            {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
+                        </Menu>
+                       </div>}
                        <div onClick={doLog}> 
                            <NavActionButton
                         //    link={"/auth/login"}

@@ -5,6 +5,7 @@ import Template from './views/Template';
 import './assets/Custom.scss';
 import Questionnaire from "./components/questionnaire/Questionnaire";
 import Dashboard from "./components/dashboard/Dashboard";
+import Users from "./components/users/users";
 
 class Admin extends Component{
 
@@ -25,8 +26,9 @@ class Admin extends Component{
             <Fragment>
                 <Template>
                     <Switch>
-                        <Route path={"/admin/questionnaire"} component={Questionnaire}/>
                         <Route path={"/admin"}  exact component={Dashboard}/>
+                        <Route path={"/admin/questionnaire"} component={Questionnaire}/>
+                        <Route path={"/admin/user-manager"}  exact component={Users}/>
                     </Switch>
                 </Template>
             </Fragment>

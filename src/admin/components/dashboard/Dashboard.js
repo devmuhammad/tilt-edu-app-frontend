@@ -1,6 +1,30 @@
 import React, {Fragment} from 'react';
+import axios from 'axios';
 
 const Dashboard  = () => {
+    const [students, setStudents] = React.useState(0)
+    const [schools, setSchools] = React.useState(0)
+    const [testTaken, setTestTaken] = React.useState(0)
+    const [transactions, setTrans] = React.useState(0)
+    React.useEffect (()=> {
+       
+        getDashboardDetails()
+    },[])
+
+    const getDashboardDetails = async () => {
+        await axios.get('https://tiltapp-api.herokuapp.com/admin/dashboard').then(async res => {
+            if (res.status == 200){
+                const dash = res.data
+                
+                await setSchools(dash.total_school)
+                setStudents(dash.total_students)
+                setTestTaken(dash.total_test_taken)
+
+            }else {alert( 'Could not retrieve dashboard data')}
+        }).catch(err => {
+            console.log(err)
+        })
+    }
     return (
         <Fragment>
             <div className="content-wrapper">
@@ -14,7 +38,7 @@ const Dashboard  = () => {
                                             <i className="mdi mdi-school mdi-36px"></i>
                                             <p className="font-weight-medium mt-2">Students Registered</p>
                                         </div>
-                                        <h1 className="font-weight-light">45679</h1>
+                                        <h1 className="font-weight-light">{students}</h1>
                                     </div>
                                 </div>
                             </div>
@@ -25,7 +49,7 @@ const Dashboard  = () => {
                                             <i className="mdi mdi-office-building mdi-36px"></i>
                                             <p className="font-weight-medium mt-2">Schools Enrolled</p>
                                         </div>
-                                        <h1 className="font-weight-light">8,0927</h1>
+                                        <h1 className="font-weight-light">{schools}</h1>
                                     </div>
                                 </div>
                             </div>
@@ -36,7 +60,7 @@ const Dashboard  = () => {
                                             <i className="mdi mdi-tag mdi-36px"></i>
                                             <p className="font-weight-medium mt-2">Test Taken</p>
                                         </div>
-                                        <h1 className="font-weight-light">22,339</h1>
+                                        <h1 className="font-weight-light">{testTaken}</h1>
 
                                     </div>
                                 </div>

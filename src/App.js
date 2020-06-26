@@ -42,7 +42,11 @@ function App (props) {
                     
                   }).then( res => {
                     if(!res.status){
-                        history.replace("/auth/login")
+                        alert("Your current session has expired, Kindly login to continue")
+                        localStorage.removeItem('@UserProfile')
+                        localStorage.removeItem('@AppT4k3n')
+                        // window.location.reload(false)
+                        // history.replace("/auth/login")
                     }else {
                         const usrProfile = JSON.parse(localStorage.getItem('@UserProfile'))
 
@@ -64,7 +68,11 @@ function App (props) {
                         // console.log(err.response);
                         const res = err.response.data
                         if(!res.status){
-                            history.replace("/auth/login")
+                        alert("Your current session has expired, Kindly login to continue")
+                        localStorage.removeItem('@UserProfile')
+                        localStorage.removeItem('@AppT4k3n')
+                        // window.location.reload(false)
+                            history.replace("/")
                         }
                         // alert(err)
                         
