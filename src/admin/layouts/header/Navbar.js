@@ -80,13 +80,13 @@ const Navbar = () => {
             if (res.status){
                 await localStorage.removeItem('@AppT4k3n')
                 await localStorage.removeItem('@UserProfile')
-                setUserProfile({})
+                // setUserProfile({})
                 window.location.reload(false)
             }
         }).catch(async  err => {
             await localStorage.removeItem('@AppT4k3n')
             await localStorage.removeItem('@UserProfile')
-            setUserProfile({})
+            // setUserProfile({})
             window.location.reload(false)
         }  )
     }

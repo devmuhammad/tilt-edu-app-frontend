@@ -43,13 +43,14 @@ const Header = (props) => {
             setPwd(false)
         }else{
         setPwd(true)
-        setLogMsg("Logout")
-        }
-
         if (usrProfile.role.role === "SCHOOL_ADMIN" || usrProfile.role.role === "ADMIN"){
             // setIsAdmin(false)
             setIsAdmin(true)
         } 
+        setLogMsg("Logout")
+
+        }
+
        
         setUserProfile(usrProfile)
         if (location.pathname == '/test'){
@@ -120,13 +121,13 @@ const Header = (props) => {
             if (res.status){
                 await localStorage.removeItem('@AppT4k3n')
                 await localStorage.removeItem('@UserProfile')
-                setUserProfile({})
+                // setUserProfile({})
                 window.location.reload(false)
             }
         }).catch(async  err => {
             await localStorage.removeItem('@AppT4k3n')
             await localStorage.removeItem('@UserProfile')
-            setUserProfile({})
+            // setUserProfile({})
             window.location.reload(false)
         }  )
     }
