@@ -22,6 +22,7 @@ const Navbar = () => {
     const [openedForm, setOpenedForm] = React.useState(undefined)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [open, setOpen] = React.useState(false)
+    const [isAdmin, setIsAdmin] = React.useState(false)
 
  
     useEffect (()=> {
@@ -30,6 +31,9 @@ const Navbar = () => {
         const usrProfile = JSON.parse(localStorage.getItem('@UserProfile'))
        
         setUserProfile(usrProfile)
+        if (usrProfile.role.role === "ADMIN"){
+            setIsAdmin(true)
+        }
     },[])
 
     const openMenu = (event) => {
@@ -164,27 +168,26 @@ const Navbar = () => {
                 <nav className="bottom-navbar">
                     <div className="container">
                         <ul className="nav page-navigation">
-                        {userProfile.roletype === "ADMIN" && <div>
-                        <li className="nav-item">
+                        {isAdmin && <li className="nav-item">
                                 <NavLink to={"/admin"} className={"nav-link"}>
                                     <i className="mdi mdi-view-dashboard-outline menu-icon"></i>
                                     <span className="menu-title">Dashboard</span>
                                 </NavLink>
-                            </li>
-                            <li className="nav-item">
+                            </li>}
+                            {isAdmin && <li className="nav-item">
                                 <NavLink to={"/admin/questionnaire"} className={"nav-link"} >
                                     <i className="mdi mdi-magnet menu-icon"></i>
                                     <span className="menu-title">Questionaire</span>
                                 </NavLink>
-                            </li>
+                            </li>}
 
-                            <li className="nav-item">
-                                <a className="nav-link" href="pages/widgets/widgets.html">
+                           {isAdmin && <li className="nav-item">
+                                <a className="nav-link" href="">
                                     <i className="mdi mdi-cash-100 menu-icon"></i>
                                     <span className="menu-title">Financial</span>
                                 </a>
                             </li>
-                            </div>}
+                            }
 
                             <li className="nav-item">
                                     <NavLink to={"/admin/user-manager"} className={"nav-link"} >
