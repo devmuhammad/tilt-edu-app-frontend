@@ -27,6 +27,7 @@ const Header = (props) => {
     const [clickedForm, setClickedForm] = React.useState(undefined)
     const [openedForm, setOpenedForm] = React.useState(undefined)
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [isAdmin, setIsAdmin] = React.useState(false)
 
     const history = useHistory();
     const location = useLocation()
@@ -44,6 +45,11 @@ const Header = (props) => {
         setPwd(true)
         setLogMsg("Logout")
         }
+
+        if (usrProfile.role.role === "SCHOOL_ADMIN" || usrProfile.role.role === "ADMIN"){
+            // setIsAdmin(false)
+            setIsAdmin(true)
+        } 
        
         setUserProfile(usrProfile)
         if (location.pathname == '/test'){
@@ -79,6 +85,12 @@ const Header = (props) => {
         setOpen(false)
 
       };
+
+      const gotoAdmin = () => {
+          if (userProfile.role.role === "ADMIN"){
+          history.push("/admin")
+          }else history.push("/admin/user-manager")
+      }
 
    
     const changePwd = () =>{
@@ -182,6 +194,7 @@ const Header = (props) => {
                         >
                             <MenuItem onClick={editProfile}>Edit Profile</MenuItem>
                             <MenuItem onClick={changePwd}>Change Password</MenuItem>
+                            { isAdmin && <MenuItem onClick={gotoAdmin}> Admin Portal</MenuItem>}
                             {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
                         </Menu>
                        </div>}

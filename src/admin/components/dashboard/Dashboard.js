@@ -5,6 +5,8 @@ const Dashboard  = () => {
     const [students, setStudents] = React.useState(0)
     const [schools, setSchools] = React.useState(0)
     const [testTaken, setTestTaken] = React.useState(0)
+    const [recentTest, setRecentTest] = React.useState([])
+    const [performingSchools, setPerfSchools] = React.useState([])
     const [transactions, setTrans] = React.useState(0)
     React.useEffect (()=> {
        
@@ -19,6 +21,8 @@ const Dashboard  = () => {
                 await setSchools(dash.total_school)
                 setStudents(dash.total_students)
                 setTestTaken(dash.total_test_taken)
+                setRecentTest(dash.latest_test)
+                setPerfSchools(dash.schools)
 
             }else {alert( 'Could not retrieve dashboard data')}
         }).catch(err => {
@@ -83,7 +87,7 @@ const Dashboard  = () => {
                 <div className="row">
                     <div className="col-lg-8 grid-margin stretch-card">
                         <div className="card">
-                            <div className="card-body">
+                            <div className="card-body" style={{height:350,overflow:"scroll"}}>
                                 <h4 className="card-title">Recent Tests</h4>
                                 <div className="table-responsive">
                                     <table className="table">
@@ -101,17 +105,18 @@ const Dashboard  = () => {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
+                                        {recentTest.map((test,index) => <tr key={index}>
                                             <td>
-                                                Moon Fever
+                                               {test.name}
                                             </td>
                                             <td>
-                                                42070
+                                                {test.percentage}%
                                             </td>
                                             <td>
-                                                801
+                                                {test.date}
                                             </td>
-                                        </tr>
+                                        </tr>)
+                                            }
                                         </tbody>
                                     </table>
                                 </div>
@@ -120,14 +125,30 @@ const Dashboard  = () => {
                     </div>
                     <div className="col-lg-4 grid-margin stretch-card">
                         <div className="card">
-                            <div className="card-body">
+                            <div className="card-body" style={{height:350,overflow:"scroll"}}>
                                 <h4 className="card-title school-title">High Performing Schools</h4>
-                                <table>
+                                <div className="table-responsive">
+                                <table className="table">
+                                <thead>
                                     <tr>
                                         <td>School</td>
                                         <td>Tests</td>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                   {performingSchools.map((school, index) => <tr key={index}>
+                                        <td> <span style={{fontSize:18,fontWeight:"500"}}>
+                                            {school.school_name}
+                                            </span> <br/> {school.location} </td>
+                                        <td>
+                                           <span style={{fontWeight:"700", fontSize:20}} className="text-primary"> 
+                                           {school.number} </span>
+                                        </td>
+                                    </tr>)
+                                }
+                                </tbody>
                                 </table>
+                                </div>
                             </div>
                         </div>
                     </div>

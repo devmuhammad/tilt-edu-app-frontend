@@ -99,11 +99,11 @@ const Navbar = () => {
                         <div className="navbar-menu-wrapper d-flex align-items-stretch justify-content-between">
                             
                             <div className="text-center navbar-brand-wrapper d-flex align-items-start justify-content-start">
-                                <NavLink to={"/admin"} className={"navbar-brand brand-logo"}>
+                                <NavLink to={"/"} className={"navbar-brand brand-logo"}>
                                     <img src={Logo} alt="logo"/>
                                 </NavLink>
 
-                                <NavLink to={"/admin"} className={"navbar-brand brand-logo-mini"}>
+                                <NavLink to={"/"} className={"navbar-brand brand-logo-mini"}>
                                     <img src={LightLogo} alt="logo"/>
                                 </NavLink>
                                 <ChangePwd
@@ -164,7 +164,8 @@ const Navbar = () => {
                 <nav className="bottom-navbar">
                     <div className="container">
                         <ul className="nav page-navigation">
-                            <li className="nav-item">
+                        {userProfile.roletype === "ADMIN" && <div>
+                        <li className="nav-item">
                                 <NavLink to={"/admin"} className={"nav-link"}>
                                     <i className="mdi mdi-view-dashboard-outline menu-icon"></i>
                                     <span className="menu-title">Dashboard</span>
@@ -177,12 +178,13 @@ const Navbar = () => {
                                 </NavLink>
                             </li>
 
-                            {userProfile.roletype === "ADMIN" &&<li className="nav-item">
+                            <li className="nav-item">
                                 <a className="nav-link" href="pages/widgets/widgets.html">
                                     <i className="mdi mdi-cash-100 menu-icon"></i>
                                     <span className="menu-title">Financial</span>
                                 </a>
-                            </li>}
+                            </li>
+                            </div>}
 
                             <li className="nav-item">
                                     <NavLink to={"/admin/user-manager"} className={"nav-link"} >

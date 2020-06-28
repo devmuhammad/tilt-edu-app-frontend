@@ -68,7 +68,7 @@ class Login extends Component {
                   }
                   else if(resp.data.role.role === "SCHOOL_ADMIN"){
                     this.setState({loading: false})
-                    this.props.history.replace('/admin')
+                    this.props.history.replace('/admin/user-manager')
                   }
                  
 
@@ -80,7 +80,7 @@ class Login extends Component {
                 
             }).catch( err => {
                 this.setState({loading: false})
-                alert("Could not login User at this moment, Please try Again")
+                alert("Invalid Login Details, Please try Again")
                 console.log(err);
             });
         }

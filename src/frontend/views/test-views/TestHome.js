@@ -6,7 +6,7 @@ import PageHeadingButton from "../../components/snippets/PageHeadingButton";
 import SectionHeading from "../../components/sections/SectionHeading";
 import axios from 'axios';
 import { Spinner} from "react-bootstrap";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles,withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -21,6 +21,24 @@ const useStyles = makeStyles({
       minWidth: 650,
     },
   });
+
+  const StyledTableCell = withStyles((theme) => ({
+    head: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    body: {
+      fontSize: 14,
+    },
+  }))(TableCell);
+  
+  const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+      },
+    },
+  }))(TableRow);
   
  
 //   [
@@ -43,7 +61,7 @@ class TestHome extends Component {
       }
     
       rows () {
-          console.log(this.state.allTests)
+          
            this.state.allTests.forEach(el => {
                     return    this.createData(el.avg_score, el.total_score, el.obtainable_score)
     })
@@ -139,15 +157,15 @@ class TestHome extends Component {
               <TableBody>
                 {this.state.allTests.map((row, index) => (
                     
-                  <TableRow key={index}>
-                    <TableCell component="th" scope="row">
+                  <StyledTableRow key={index}>
+                    <StyledTableCell component="th" scope="row">
                       {row.date_taken}
-                    </TableCell>
-                    <TableCell align="right">{row.avg_score}</TableCell>
-                    <TableCell align="right">{row.total_score}</TableCell>
-                    <TableCell align="center">{row.obtainable_score}</TableCell>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.avg_score}</StyledTableCell>
+                    <StyledTableCell align="right">{row.total_score}</StyledTableCell>
+                    <StyledTableCell align="center">{row.obtainable_score}</StyledTableCell>
                     {/* <TableCell align="right">{row.protein}</TableCell> */}
-                  </TableRow>
+                  </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
