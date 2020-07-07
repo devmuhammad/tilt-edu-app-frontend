@@ -12,6 +12,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import axios from 'axios';
 
+import { useHistory,useLocation } from "react-router-dom";
+
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -24,6 +26,7 @@ const Navbar = () => {
     const [open, setOpen] = React.useState(false)
     const [isAdmin, setIsAdmin] = React.useState(false)
 
+    const history = useHistory()
  
     useEffect (()=> {
        
@@ -85,12 +88,14 @@ const Navbar = () => {
                 await localStorage.removeItem('@AppT4k3n')
                 await localStorage.removeItem('@UserProfile')
                 // setUserProfile({})
+                history.replace("/")
                 window.location.reload(false)
             }
         }).catch(async  err => {
             await localStorage.removeItem('@AppT4k3n')
             await localStorage.removeItem('@UserProfile')
             // setUserProfile({})
+            
             window.location.reload(false)
         }  )
     }
@@ -181,19 +186,47 @@ const Navbar = () => {
                                 </NavLink>
                             </li>}
 
-                           {isAdmin && <li className="nav-item">
-                                <a className="nav-link" href="">
+                           <li className="nav-item">
+                                <a className="nav-link" href="#">
                                     <i className="mdi mdi-cash-100 menu-icon"></i>
-                                    <span className="menu-title">Financial</span>
+                                    <span className="menu-title">Financials</span>
                                 </a>
                             </li>
-                            }
+                            
 
                             <li className="nav-item">
-                                    <NavLink to={"/admin/user-manager"} className={"nav-link"} >
+                                <div className="nav-link" >
+                                    
                                         <i className="mdi mdi-magnet menu-icon"></i>
                                         <span className="menu-title">Manage Users</span>
-                                    </NavLink>
+                                        <i className="menu-arrow"></i>
+                                    
+                                     <div className="submenu">
+                                        <ul className="submenu-item">
+                                        {isAdmin && <li className="nav-item">
+                                        <NavLink to={"/admin/user-manager"} className={"nav-link"} >
+                                            Admin
+                                        </NavLink>
+                                        </li>}
+                                        {isAdmin && <li className="nav-item">
+                                        <NavLink to={"/admin/user-manager/private"} className={"nav-link"}>
+                                            Private Learners
+                                        </NavLink>
+                                        </li>}
+                                        {isAdmin && <li className="nav-item">
+                                        <NavLink to={"/admin/user-manager/school"} className={"nav-link"}>
+                                            School Admin
+                                        </NavLink>
+                                        </li>}
+                                        <li className="nav-item">
+                                        <NavLink to={"/admin/user-manager/student"} className={"nav-link"} >
+                                            Students
+                                        </NavLink>
+                                        </li>
+                                       
+                                    </ul>
+                                </div>
+                            </div>
                             </li>
 
                             <li className="nav-item">
@@ -203,15 +236,15 @@ const Navbar = () => {
                                 <div className="submenu">
                                     <ul className="submenu-item">
                                         <li className="nav-item"><a className="nav-link"
-                                                                    href="pages/apps/email.html">Email</a></li>
+                                                                    href="#">Email</a></li>
                                         <li className="nav-item"><a className="nav-link"
-                                                                    href="pages/apps/calendar.html">Calendar</a>
+                                                                    href="#">Calendar</a>
                                         </li>
                                         <li className="nav-item"><a className="nav-link"
-                                                                    href="pages/apps/todo.html">Todo List</a>
+                                                                    href="#">Todo List</a>
                                         </li>
                                         <li className="nav-item"><a className="nav-link"
-                                                                    href="pages/apps/gallery.html">Gallery</a>
+                                                                    href="#">Gallery</a>
                                         </li>
                                     </ul>
                                 </div>

@@ -9,6 +9,10 @@ import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import DialogActions from '@material-ui/core/DialogActions';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -17,6 +21,7 @@ import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Clear from '@material-ui/icons/Clear';
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
@@ -32,9 +37,9 @@ const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
     Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+    Delete: forwardRef((props, ref) => <Delete style={{color:'#5e2572'}} {...props} ref={ref} />),
     DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+    Edit: forwardRef((props, ref) => <Edit style={{color:'#5e2572'}} {...props} ref={ref} />),
     Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
     FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -46,14 +51,19 @@ const tableIcons = {
     Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
     SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
     ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+    ViewColumn: forwardRef((props, ref) => <ViewColumn style={{color:'#5e2572'}} {...props} ref={ref} />)
 };
+
+function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+      }
 
 const PrivateLearner  = (props) => {
 
     const [selStudent, setSelStudent] = React.useState("")
     const [hasTest,setHasTest] = React.useState(true)
     const [studentTests, setTests] = React.useState([])
+    const [open, setOpen] = React.useState(false)
     const [users, setUsers] = React.useState({
         columns: [
             { title: 'First Name', field: 'first_name' },
@@ -61,9 +71,9 @@ const PrivateLearner  = (props) => {
           //   { title: 'Middle_name', field: 'middle_name'},
             {title: 'Email',field: 'email'},
             {title: 'Phone',field: 'phone_number'},
-            {title: 'Status', 
-            field: 'status',
-            lookup: {true: 'true',false: 'false' }},
+            // {title: 'Status', 
+            // field: 'status',
+            // lookup: {true: 'true',false: 'false' }},
 
             {title: 'Password',field: 'password'}
         ],
@@ -109,6 +119,19 @@ const PrivateLearner  = (props) => {
         })
     }
 
+     const  showSuccess = () => {
+        setOpen(true)
+      };
+    
+     const  handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false)
+
+      };
+
     const addLearner = async (nwLearner) => {
        
         await axios({
@@ -122,7 +145,7 @@ const PrivateLearner  = (props) => {
           }).then( res => {
               if (res.status){
                 //   setLoading(false)
-                    props.showSuccess()
+                    showSuccess()
             
               }else {
                 //   setLoading(false)
@@ -161,7 +184,7 @@ const PrivateLearner  = (props) => {
           }).then( res => {
               if (res.status){
                 //   setLoading(false)
-                    props.showSuccess()
+                   showSuccess()
             
               }else {
                 //   setLoading(false)
@@ -209,9 +232,15 @@ const PrivateLearner  = (props) => {
 
 
     return (
-        <div className="row">
-                        <div className="col-lg-8 grid-margin stretch-card">
+        <div className="col-lg-12 grid-margin">
+                    <div className="row" style={{marginTop:20}}>
+                        <div className="col-lg-9 grid-margin stretch-card">
                                 <div className="card">
+                                <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                                    <Alert onClose={handleClose} severity="success">
+                                        Success ! DONE
+                                    </Alert>
+                                </Snackbar>
                                     {/* <div className="card-body"> */}
 
                                         {/* <div className="compose group">
@@ -225,12 +254,20 @@ const PrivateLearner  = (props) => {
                                             columns={users.columns}
                                             data={users.data}
                                             icons={tableIcons}
-                                            // options={{
-                                            //     actionsColumnIndex: -1
-                                            //   }}
+                                            options={{
+                                                actionsColumnIndex: -1,
+                                                headerStyle: {
+                                                    backgroundColor: '#edd0f7',
+                                                    color: 'black'
+                                                  },
+                                                  rowStyle: {
+                                                  color:"f3f3f3",
+                                                  fontWeight:"light"
+                                                }
+                                              }}
                                               actions={[
                                                 {
-                                                  icon: () => <ViewColumn />,
+                                                  icon: () => <ViewColumn style={{color:'#5e2572'}}/>,
                                                   tooltip: 'View Learner Results',
                                                   onClick: (event, rowData) => {
                                                     // Do save operation
@@ -283,7 +320,7 @@ const PrivateLearner  = (props) => {
                                 {/* </div> */}
                             </div>
                             </div>
-                            <div className="col-lg-4 grid-margin stretch-card ">
+                            <div className="col-lg-3 grid-margin stretch-card ">
                             <div className="card row-lg-6">
                                 <div className="card-body" style={{height:350,overflow:"scroll"}}>
                                 {/* <div style={{position:"fixed", flex:1}}>   */}
@@ -318,6 +355,7 @@ const PrivateLearner  = (props) => {
                        </div>
                        
                     </div>
+            </div>
 
     )
 

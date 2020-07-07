@@ -17,6 +17,7 @@ import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Clear from '@material-ui/icons/Clear';
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
@@ -28,17 +29,15 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 
 import axios from 'axios';
-import SchoolAdmin from './school-admin'
-import PrivateLearner from './other-users'
-import Students from './students'
+
 
    const tableIcons = {
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
         Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
         Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+        Delete: forwardRef((props, ref) => <Delete style={{color:'#5e2572'}} {...props} ref={ref} />),
         DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+        Edit: forwardRef((props, ref) => <Edit style={{color:'#5e2572'}} {...props} ref={ref} />),
         Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
         Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
         FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -93,7 +92,7 @@ const Users  = () => {
           {title: 'Phone',field: 'phone_number'},
           {title: 'Status', 
             field: 'status',
-            lookup: {true: 'true',false: 'false' }},
+            lookup: {1: 'true',0: 'false' }},
           {title: 'Password',field: 'password'},
         ],
         data: [],
@@ -215,6 +214,7 @@ const Users  = () => {
                     adm.last_name = el.last_name
                     adm.phone_number = el.phone_number
                     adm.email = el.email
+                    adm.status = el.status
                     adm.password = '******'
                     admData.push(adm)
                 })
@@ -235,14 +235,14 @@ const Users  = () => {
     return (
         <Fragment>
            
-           <div className="content-wrapper">
+           <div className="col-lg-12 grid-margin">
            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success">
                     Success ! DONE
                 </Alert>
             </Snackbar>
-                <Paper square>
-                    {isAdmin ? <div>
+                {/* <Paper square> */}
+                    {/* {isAdmin ? <div>
                     <Tabs
                         value={value}
                         indicatorColor="primary"
@@ -259,11 +259,11 @@ const Users  = () => {
                        
                         <Tab label="School Students" />
 
-                    </Tabs>
+                    </Tabs> */}
 
-                    <TabPanel value={value} index={0}>
+                    {/* <TabPanel value={value} index={0}> */}
                         {/* <div className="row"> */}
-                            <div className="col-lg-12 grid-margin stretch-card">
+                            <div className="col-lg-12 stretch-card">
                                 {/* <div className="card"> */}
                                     <div className="card-body">
 
@@ -286,7 +286,16 @@ const Users  = () => {
                                             //     }
                                             //   ]}
                                             options={{
-                                                actionsColumnIndex: -1
+                                                actionsColumnIndex: -1,
+                                                headerStyle: {
+                                                  backgroundColor: '#edd0f7',
+                                                  color: 'black'
+                                                },
+                                                rowStyle: {
+                                                color:"f3f3f3",
+                                                fontWeight:"light"
+                                              }
+
                                               }}
                                             editable={{
                                                 onRowAdd: (newData) =>
@@ -331,10 +340,10 @@ const Users  = () => {
                                 {/* </div> */}
                             {/* </div> */}
                             </div>
-                        </TabPanel>
+                        {/* </TabPanel> */}
 
 
-                        <TabPanel value={value} index={1}>
+                        {/* <TabPanel value={value} index={1}>
                         <PrivateLearner showSuccess={showSuccess} />
                         </TabPanel>
 
@@ -345,9 +354,9 @@ const Users  = () => {
                         <TabPanel value={value} index={3}>
                         <Students showSuccess={showSuccess}/>
                         </TabPanel>
-                        </div> : <Students showSuccess={showSuccess}/>}
+                        </div> : <Students showSuccess={showSuccess}/>} */}
                         
-                    </Paper>
+                    {/* </Paper> */}
                     
             </div>     
                

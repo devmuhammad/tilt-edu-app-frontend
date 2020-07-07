@@ -68,7 +68,7 @@ class Login extends Component {
                   }
                   else if(resp.data.role.role === "SCHOOL_ADMIN"){
                     this.setState({loading: false})
-                    this.props.history.replace('/admin/user-manager')
+                    this.props.history.replace('/admin/user-manager/student')
                   }
                  
 

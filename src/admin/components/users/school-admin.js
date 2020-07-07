@@ -9,6 +9,9 @@ import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import DialogActions from '@material-ui/core/DialogActions';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -17,6 +20,7 @@ import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Clear from '@material-ui/icons/Clear';
 import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
@@ -31,9 +35,9 @@ const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
     Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+    Delete: forwardRef((props, ref) => <Delete style={{color:'#5e2572'}} {...props} ref={ref} />),
     DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+    Edit: forwardRef((props, ref) => <Edit style={{color:'#5e2572'}} {...props} ref={ref} />),
     Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
     Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
     FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -45,8 +49,11 @@ const tableIcons = {
     Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
     SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
     ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+    ViewColumn: forwardRef((props, ref) => <ViewColumn style={{color:'#5e2572'}} {...props} ref={ref} />)
 };
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
 const SchoolAdmin  = (props) => {
 
@@ -57,6 +64,7 @@ const SchoolAdmin  = (props) => {
     const [loading, setLoading] = React.useState(false)
     const [btnType, setBtnType] = React.useState("Update")
     const [pass, setPass] = React.useState("")
+    const [open, setOpen] = React.useState(false)
     const [editDet, setEditDet] = React.useState({
         first_name: "",
         last_name: "",
@@ -68,9 +76,10 @@ const SchoolAdmin  = (props) => {
           { title: 'School', field: 'name' },
           { title: 'Address', field: 'address' },
         //   { title: 'city', field: 'city'},
-          {title: 'state',field: 'state'},
+          {title: 'State',field: 'state'},
+          {title: 'Students',field: 'total_student'},
         //   {title: 'country',field: 'country'},
-          {title: 'Allocation',field: 'allocation'},
+          {title: 'Capacity Left',field: 'number_left'},
         ],
         data: [],
       });
@@ -97,8 +106,8 @@ const SchoolAdmin  = (props) => {
                 let schlDt = {}
                 dt.forEach(el => {
                     schlDt = el
-                    schlDt.country = "Nigeria"
-                    schlDt.allocation = 10
+                    // schlDt.country = "Nigeria"
+                    
                     schoolData.push(schlDt)
                 })
                 await setSchools((prevState) => {
@@ -124,7 +133,7 @@ const SchoolAdmin  = (props) => {
                 "school_state":school.state,
                 "school_city":school.city,
                 "school_zipcode":school.zipcode,
-                "allocation": school.allocation,
+                // "allocation": school.allocation,
                 "first_name": editDet.first_name,
                 "last_name": editDet.last_name,
                 "email": editDet.email,
@@ -142,7 +151,7 @@ const SchoolAdmin  = (props) => {
           }).then( res => {
               if (res.status){
                 //   setLoading(false)
-                    props.showSuccess()
+                    showSuccess()
             
               }else {
                 //   setLoading(false)
@@ -172,7 +181,7 @@ const SchoolAdmin  = (props) => {
           }).then( res => {
               if (res.status){
                 //   setLoading(false)
-                    props.showSuccess()
+                    showSuccess()
             
               }else {
                 //   setLoading(false)
@@ -219,7 +228,7 @@ const SchoolAdmin  = (props) => {
           }).then( res => {
               if (res.status){
                 //   setLoading(false)
-                    props.showSuccess()
+                   showSuccess()
             
               }else {
                 //   setLoading(false)
@@ -235,6 +244,19 @@ const SchoolAdmin  = (props) => {
             // props.handleRemoveModal();
         }).catch( err => { console.log(err)});
     }
+
+    const  showSuccess = () => {
+        setOpen(true)
+      };
+    
+     const  handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpen(false)
+
+      };
     
 
     const updateFirstName = e =>{
@@ -298,9 +320,15 @@ const SchoolAdmin  = (props) => {
 
 
     return (
-        <div className="row">
+        <div className="col-lg-12 grid-margin">
+                    <div className="row" style={{marginTop:20}}>
                         <div className="col-lg-8 grid-margin stretch-card">
                                 <div className="card">
+                                <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                                    <Alert onClose={handleClose} severity="success">
+                                        Success ! DONE
+                                    </Alert>
+                                </Snackbar>
                                     {/* <div className="card-body"> */}
 
                                         {/* <div className="compose group">
@@ -314,9 +342,20 @@ const SchoolAdmin  = (props) => {
                                             columns={schools.columns}
                                             data={schools.data}
                                             icons={tableIcons}
+                                            options={{
+                                                actionsColumnIndex: -1,
+                                                headerStyle: {
+                                                    backgroundColor: '#edd0f7',
+                                                    color: 'black'
+                                                  },
+                                                  rowStyle: {
+                                                  color:"f3f3f3",
+                                                  fontWeight:"light"
+                                                }
+                                              }}
                                             actions={[
                                                 {
-                                                  icon: () => <ViewColumn />,
+                                                  icon: () => <ViewColumn style={{color:'#5e2572'}} />,
                                                   tooltip: 'View School Admin',
                                                   onClick: (event, rowData) => {
                                                     // Do save operation
@@ -407,6 +446,7 @@ const SchoolAdmin  = (props) => {
                         </div>
                         </div>
                     </div>
+                </div>
 
     )
 

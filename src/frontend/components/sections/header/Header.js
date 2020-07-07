@@ -176,15 +176,13 @@ const Header = (props) => {
                         <NavigationLinks/>
                     </div>
                     <div className="d-flex align-items-center">
-                       {/* {!isTest && <NavActionButton
-                           link={"/test"}
-                           className={"btn btn-sm mr-3 btn-pill btn-secondary animate-up-2"}
-                           icon={"fa-file-alt"}
-                           text={"Take Test"}
-                       />} */}
+                       
                        {canPwd && <div className={" mr-3 animate-up-2"}>
+
                        <IconButton color="primary" aria-label="account" component="span" onClick={openMenu}>
-                        <AccountCircleIcon fontSize="large" />
+                        <AccountCircleIcon fontSize="medium" />
+                        <span className="nav-profile-name font-medium">{userProfile && userProfile.fullname}</span>
+
                         </IconButton>
                         <Menu
                             id="simple-menu"
@@ -195,10 +193,18 @@ const Header = (props) => {
                         >
                             <MenuItem onClick={editProfile}>Edit Profile</MenuItem>
                             <MenuItem onClick={changePwd}>Change Password</MenuItem>
+                            {!isAdmin && <MenuItem >Test History</MenuItem>}
+                            {!isAdmin && <MenuItem >Payments</MenuItem>}
                             { isAdmin && <MenuItem onClick={gotoAdmin}> Admin Portal</MenuItem>}
                             {/* <MenuItem onClick={handleClose}>Logout</MenuItem> */}
                         </Menu>
                        </div>}
+                       <NavActionButton
+                           link={"/test"}
+                           className={"btn btn-sm mr-3 btn-pill btn-secondary animate-up-2"}
+                           icon={"fa-file-alt"}
+                           text={"Take Test"}
+                       />
                        <div onClick={doLog}> 
                            <NavActionButton
                         //    link={"/auth/login"}

@@ -190,10 +190,10 @@ class TestHome extends Component {
                         color={"secondary"}
                     />}
                     </div>
-                    <h3 className="pt-4 mb-0 ">Patiently answer every question honestly</h3>
+                    <h3 className="pt-4 mb-0 ">Answer every question honestly</h3>
                     <p className="lead pt-0">Ask your teacher or guardian to explain any question you do not clearly understand</p>
-                    <h3 className="pt-4 pb-4 mb-0 text-tertiary">Below are your test history so far</h3>
-                    {this.state.user ? this.TestHistory() : <span> You have not taken any test at this moment.</span>}
+                    {/* <h3 className="pt-4 pb-4 mb-0 text-tertiary">Below are your test history so far</h3> */}
+                    {/* {this.state.user ? this.TestHistory() : <span> You have not taken any test at this moment.</span>} */}
                     <SectionHeading
                         renderHeading={() => "How the test works!"}
                         renderDescription={() => "The following are the various stages of our assessment"}

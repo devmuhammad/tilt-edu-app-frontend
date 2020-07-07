@@ -3,6 +3,7 @@ import PageHeadingButton from "../snippets/PageHeadingButton";
 import studentBanner from "../../assets/images/illustrations/students-banner.svg"
 
 const HomeHeadingSection = () => {
+
     return (
         <section className="section-header bg-soft text-dark">
             <div className="container">
