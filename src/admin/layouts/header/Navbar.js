@@ -156,6 +156,7 @@ const Navbar = () => {
                                         onClose={closeMenu}
                                             >
                                         <MenuItem onClick={editProfile}>Edit Profile</MenuItem>
+                                        <MenuItem>Edit School</MenuItem>
                                         <MenuItem onClick={changePwd}>Change Password</MenuItem>
                                         <MenuItem onClick={logout}>Logout</MenuItem>
                                     </Menu>

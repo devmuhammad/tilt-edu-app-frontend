@@ -108,7 +108,7 @@ const Students  = (props) => {
     const config = {
         reference: (new Date()).getTime(),
         email: currUser.email,
-        amount: selSub.price,
+        amount: selSub.price*100,
         publicKey: 'pk_test_8e883472a3c7791d253b405964cd45013f816b19',
         metadata: {
                      custom_fields: [
@@ -131,7 +131,7 @@ const Students  = (props) => {
                   },
     };
 
-    const initializePayment = usePaystackPayment(config);
+    // const initializePayment = usePaystackPayment(config);
 
     const getSubscriptions = async () => {
         await axios.get('https://tiltapp-api.herokuapp.com/subscriptions').then(async res => {
